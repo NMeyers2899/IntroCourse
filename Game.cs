@@ -6,14 +6,19 @@ namespace HelloWorld
 {
     class Game
     {
+        // Player Stats
         string playerName = "Nicholas";
         float playerHealth = 10;
         float playerAttackPower = 100;
 
+        // Enemy Stats
         string enemyName = "Goblin";
         float enemyHealth = 200;
         float enemyAttackPower = 5;
 
+        /// <summary>
+        /// Pits the player against the enemy in a fight to the death.
+        /// </summary>
         void Battle()
         {
             string playerChoice;
@@ -40,6 +45,7 @@ namespace HelloWorld
                 }
                 else if (playerChoice == "2" || playerChoice.ToLower() == "run away")
                 {
+                    playerHealth = 0;
                     return;
                 }
                 else
@@ -50,6 +56,9 @@ namespace HelloWorld
             }
         }
 
+        /// <summary>
+        /// Asks the user to hit a key. Then clears the screen.
+        /// </summary>
         void ClearScreen()
         {
             Console.WriteLine("Hit Any Key To Continue");
@@ -57,14 +66,24 @@ namespace HelloWorld
             Console.Clear();
         }
 
-        public void Run()
+        /// <summary>
+        /// Player must fight a goblin.
+        /// </summary>
+        void RoomOne()
         {
+            Console.WriteLine("Uh oh! Gablins!");
+
             Battle();
 
             if (playerHealth <= 0)
                 Console.WriteLine("Game Over");
             else
                 Console.WriteLine("You Win!");
+        }
+
+        public void Run()
+        {
+            RoomOne();
         }
     }
 }
