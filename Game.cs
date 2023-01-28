@@ -4,6 +4,9 @@ using System.Text;
 
 namespace HelloWorld
 {
+    /// <summary>
+    /// A character that holds some stats.
+    /// </summary>
     struct Character
     {
         public string Name;
@@ -13,12 +16,9 @@ namespace HelloWorld
 
     class Game
     {
+        // Declares a player and enemy character.
         Character playerCharacter;
-
-        // Enemy Stats
-        string enemyName;
-        float enemyHealth;
-        float enemyAttackPower;
+        Character currentEnemy;
 
         /// <summary>
         /// Allows the user to set the name for the player.
@@ -43,9 +43,9 @@ namespace HelloWorld
         /// </summary>
         void InitalizeEnemy(string name, float health, float attackPower)
         {
-            enemyName = name;
-            enemyHealth = health;
-            enemyAttackPower = attackPower;
+            currentEnemy.Name = name;
+            currentEnemy.Health = health;
+            currentEnemy.AttackPower = attackPower;
         }
 
         /// <summary>
@@ -57,33 +57,34 @@ namespace HelloWorld
             string playerChoice;
 
             // While both the enemy and the player are still alive...
-            while(enemyHealth > 0 && playerCharacter.Health > 0)
+            while(currentEnemy.Health > 0 && playerCharacter.Health > 0)
             {
-                Console.WriteLine("The " + enemyName + " stands before you. What shall you do?");
+                Console.WriteLine("The " + currentEnemy.Name + " stands before you. What shall you do?");
 
                 // Display the stats for the player and enemy.
                 PrintCharacterStats(playerCharacter.Name, playerCharacter.Health, playerCharacter.AttackPower);
-                PrintCharacterStats(enemyName, enemyHealth, enemyAttackPower);
+                PrintCharacterStats(currentEnemy.Name, currentEnemy.Health, currentEnemy.AttackPower);
 
                 // Check to see what the player wishes to do.
                 Console.WriteLine("1. Attack \n2. Run Away");
                 playerChoice = Console.ReadLine();
+                Console.Clear();
 
                 // If the player picks the first or attack option...
                 if (playerChoice == "1" || playerChoice.ToLower() == "attack")
                 {
                     // ...deal damage to the enemy.
-                    Console.WriteLine("You slash out at the " + enemyName + "!");
-                    enemyHealth -= playerCharacter.AttackPower;
+                    Console.WriteLine("You slash out at the " + currentEnemy.Name + "!");
+                    currentEnemy.Health -= playerCharacter.AttackPower;
                     ClearScreen();
 
                     // If the enemy is dead, exit the fight.
-                    if (enemyHealth <= 0)
+                    if (currentEnemy.Health <= 0)
                         return;
 
                     // If the enemy is still alive, the enemy damages the player.
-                    Console.WriteLine("The " + enemyName + " lunges at you!");
-                    playerCharacter.Health -= enemyAttackPower;
+                    Console.WriteLine("The " + currentEnemy.Name + " lunges at you!");
+                    playerCharacter.Health -= currentEnemy.AttackPower;
                     ClearScreen();
                 }
                 // If the player picks the second or run away option...
