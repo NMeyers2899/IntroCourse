@@ -4,12 +4,16 @@ using System.Text;
 
 namespace HelloWorld
 {
+    struct Character
+    {
+        public string Name;
+        public float Health;
+        public float AttackPower;
+    }
+
     class Game
     {
-        // Player Stats
-        string playerName = "Nicholas";
-        float playerHealth = 10;
-        float playerAttackPower = 100;
+        Character playerCharacter;
 
         // Enemy Stats
         string enemyName;
@@ -21,12 +25,17 @@ namespace HelloWorld
         /// </summary>
         void PlayerSetUp()
         {
+            // Ask the user what they want their character to be called.
             Console.WriteLine("Hello! What is your name?");
-            playerName = Console.ReadLine();
+            playerCharacter.Name = Console.ReadLine();
             Console.Clear();
 
-            Console.WriteLine("Welcome to your own little adventure, " + playerName);
+            Console.WriteLine("Welcome to your own little adventure, " + playerCharacter.Name);
             ClearScreen();
+
+            // Set up the player's health and attack power.
+            playerCharacter.Health = 10;
+            playerCharacter.AttackPower = 100;
         }
 
         /// <summary>
@@ -48,12 +57,12 @@ namespace HelloWorld
             string playerChoice;
 
             // While both the enemy and the player are still alive...
-            while(enemyHealth > 0 && playerHealth > 0)
+            while(enemyHealth > 0 && playerCharacter.Health > 0)
             {
                 Console.WriteLine("The " + enemyName + " stands before you. What shall you do?");
 
                 // Display the stats for the player and enemy.
-                PrintCharacterStats(playerName, playerHealth, playerAttackPower);
+                PrintCharacterStats(playerCharacter.Name, playerCharacter.Health, playerCharacter.AttackPower);
                 PrintCharacterStats(enemyName, enemyHealth, enemyAttackPower);
 
                 // Check to see what the player wishes to do.
@@ -65,7 +74,7 @@ namespace HelloWorld
                 {
                     // ...deal damage to the enemy.
                     Console.WriteLine("You slash out at the " + enemyName + "!");
-                    enemyHealth -= playerAttackPower;
+                    enemyHealth -= playerCharacter.AttackPower;
                     ClearScreen();
 
                     // If the enemy is dead, exit the fight.
@@ -74,14 +83,14 @@ namespace HelloWorld
 
                     // If the enemy is still alive, the enemy damages the player.
                     Console.WriteLine("The " + enemyName + " lunges at you!");
-                    playerHealth -= enemyAttackPower;
+                    playerCharacter.Health -= enemyAttackPower;
                     ClearScreen();
                 }
                 // If the player picks the second or run away option...
                 else if (playerChoice == "2" || playerChoice.ToLower() == "run away")
                 {
                     // ...set up the player for a game over.
-                    playerHealth = 0;
+                    playerCharacter.Health = 0;
                     return;
                 }
                 // If the player inputs anything else, let them know it was an invalid input.
@@ -123,7 +132,7 @@ namespace HelloWorld
 
             Battle();
 
-            if (playerHealth <= 0)
+            if (playerCharacter.Health <= 0)
                 Console.WriteLine("Game Over");
             else
                 Console.WriteLine("You Win!");
