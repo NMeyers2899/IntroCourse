@@ -16,6 +16,22 @@ namespace HelloWorld
         float enemyHealth;
         float enemyAttackPower;
 
+        /// <summary>
+        /// Allows the user to set the name for the player.
+        /// </summary>
+        void PlayerSetUp()
+        {
+            Console.WriteLine("Hello! What is your name?");
+            playerName = Console.ReadLine();
+            Console.Clear();
+
+            Console.WriteLine("Welcome to your own little adventure, " + playerName);
+            ClearScreen();
+        }
+
+        /// <summary>
+        /// Gives the enemy a name, some health, and attack power.
+        /// </summary>
         void InitalizeEnemy(string name, float health, float attackPower)
         {
             enemyName = name;
@@ -31,11 +47,11 @@ namespace HelloWorld
             // Holds what actions the player chooses to take.
             string playerChoice;
 
-            Console.WriteLine("The " + enemyName + " stands before you. What shall you do?");
-
             // While both the enemy and the player are still alive...
             while(enemyHealth > 0 && playerHealth > 0)
             {
+                Console.WriteLine("The " + enemyName + " stands before you. What shall you do?");
+
                 // Display the stats for the player and enemy.
                 PrintCharacterStats(playerName, playerHealth, playerAttackPower);
                 PrintCharacterStats(enemyName, enemyHealth, enemyAttackPower);
@@ -115,6 +131,8 @@ namespace HelloWorld
 
         public void Run()
         {
+            PlayerSetUp();
+
             RoomOne();
         }
     }
