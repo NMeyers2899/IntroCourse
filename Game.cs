@@ -36,7 +36,11 @@ namespace HelloWorld
             // While both the enemy and the player are still alive...
             while(enemyHealth > 0 && playerHealth > 0)
             {
-                // ...check to see what the player wishes to do.
+                // Display the stats for the player and enemy.
+                PrintCharacterStats(playerName, playerHealth, playerAttackPower);
+                PrintCharacterStats(enemyName, enemyHealth, enemyAttackPower);
+
+                // Check to see what the player wishes to do.
                 Console.WriteLine("1. Attack \n2. Run Away");
                 playerChoice = Console.ReadLine();
 
@@ -83,10 +87,13 @@ namespace HelloWorld
             Console.Clear();
         }
 
+        /// <summary>
+        /// Prints out the stats of a character.
+        /// </summary>
         void PrintCharacterStats(string name, float health, float attackPower)
         {
             Console.WriteLine(name + "'s Stats");
-            Console.WriteLine("Health : " + health + "\nAttack : " + attackPower);
+            Console.WriteLine("Health : " + health + "\nAttack : " + attackPower + "\n");
         }
 
         /// <summary>
