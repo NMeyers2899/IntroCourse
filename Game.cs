@@ -231,7 +231,17 @@ namespace HelloWorld
             if (gameShouldEnd)
                 Console.WriteLine("Game Over");
             else
-                Console.WriteLine("You Win!");
+            {
+                Console.WriteLine("You Win! And take Vrax's skill!");
+                Skill eviscerate; eviscerate.Name = "Eviscerate"; eviscerate.AttackPower = 10;
+                playerCharacter.PlayerSkills = eviscerate;
+            }
+        }
+
+        void RoomFour()
+        {
+            if (gameShouldEnd)
+                return;
         }
 
         public void Run()
