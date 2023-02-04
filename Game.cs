@@ -12,10 +12,22 @@ namespace HelloWorld
         public string Name;
         public float Health;
         public float AttackPower;
+        public Skill PlayerSkills;
+    }
+
+    struct Skill
+    {
+        public string Name;
+        public float AttackPower;
     }
 
     class Game
     {
+        /// <summary>
+        /// Checks to see if the game should end.
+        /// </summary>
+        bool gameShouldEnd = false;
+
         // Declares a player and enemy character.
         Character playerCharacter;
         Character currentEnemy;
@@ -67,6 +79,8 @@ namespace HelloWorld
 
                 // Check to see what the player wishes to do.
                 Console.WriteLine("1. Attack \n2. Run Away");
+                if (playerCharacter.PlayerSkills.Name != null)
+                    Console.WriteLine("3. " + playerCharacter.PlayerSkills.Name);
                 playerChoice = Console.ReadLine();
                 Console.Clear();
 
@@ -91,8 +105,25 @@ namespace HelloWorld
                 else if (playerChoice == "2" || playerChoice.ToLower() == "run away")
                 {
                     // ...set up the player for a game over.
-                    playerCharacter.Health = 0;
+                    gameShouldEnd = true;
                     return;
+                }
+                // If the player chooses the skill, have them attack the enemy with that skill.
+                else if (playerCharacter.PlayerSkills.Name != null && (playerChoice == "3" || playerChoice.ToLower() == playerCharacter.PlayerSkills.Name.ToLower()))
+                {
+                    // ...deal damage to the enemy.
+                    Console.WriteLine("You use " + playerCharacter.PlayerSkills.Name + " against the " + currentEnemy.Name + "!");
+                    currentEnemy.Health -= playerCharacter.PlayerSkills.AttackPower;
+                    ClearScreen();
+
+                    // If the enemy is dead, exit the fight.
+                    if (currentEnemy.Health <= 0)
+                        return;
+
+                    // If the enemy is still alive, the enemy damages the player.
+                    Console.WriteLine("The " + currentEnemy.Name + " lunges at you!");
+                    playerCharacter.Health -= currentEnemy.AttackPower;
+                    ClearScreen();
                 }
                 // If the player inputs anything else, let them know it was an invalid input.
                 else
@@ -101,6 +132,10 @@ namespace HelloWorld
                     ClearScreen();
                 }
             }
+
+            // If the player has died, set game should end to true.
+            if (playerCharacter.Health <= 0)
+                gameShouldEnd = true;
         }
 
         /// <summary>
@@ -131,7 +166,7 @@ namespace HelloWorld
             string playerChoice;
             int numberOfGuesses = 4;
 
-            Console.WriteLine("This guy will join you if you can solve my riddle!");
+            Console.WriteLine("I'll teach you a new skill if you can solve my riddle!");
             ClearScreen();
 
             // While the player still has guesses, ask them the question and check their answer.
@@ -148,13 +183,15 @@ namespace HelloWorld
                 if(playerChoice.ToLower() == "knight")
                 {
                     Console.WriteLine("Oh wow, you are just too smart for me. Here you go.");
+                    Skill throatChop; throatChop.Name = "Throat Chop"; throatChop.AttackPower = 6;
+                    playerCharacter.PlayerSkills = throatChop;
                     ClearScreen();
                     return;
                 }
             }
 
             // If they run out of guesses, they do not get a party member and still move on.
-            Console.WriteLine("Uh oh, no party member for you.");
+            Console.WriteLine("Uh oh, no new move for you.");
             ClearScreen();
             return;
         }
@@ -170,7 +207,28 @@ namespace HelloWorld
 
             Battle();
 
-            if (playerCharacter.Health <= 0)
+            if (gameShouldEnd)
+                Console.WriteLine("Game Over");
+            else
+                Console.WriteLine("You Win!");
+
+            ClearScreen();
+                
+        }
+
+        void RoomThree()
+        {
+            if (gameShouldEnd)
+                return;
+
+            Console.WriteLine("Face off against Tyrant Vrax to gain a new skill!");
+            ClearScreen();
+
+            InitalizeEnemy("Tyrant Vrax", 15, 4);
+
+            Battle();
+
+            if (gameShouldEnd)
                 Console.WriteLine("Game Over");
             else
                 Console.WriteLine("You Win!");
@@ -183,6 +241,8 @@ namespace HelloWorld
             RoomOne();
 
             RoomTwo();
+
+            RoomThree();
         }
     }
 }
