@@ -35,7 +35,7 @@ namespace HelloWorld
 
             // Set up the player's health and attack power.
             playerCharacter.Health = 10;
-            playerCharacter.AttackPower = 100;
+            playerCharacter.AttackPower = 3;
         }
 
         /// <summary>
@@ -123,13 +123,50 @@ namespace HelloWorld
         }
 
         /// <summary>
-        /// Player must fight a goblin.
+        /// The first challenge. A riddle, that if solved will grant you a party member.
         /// </summary>
         void RoomOne()
         {
+            // Declare and initalize the player's choice and how many guesses they get.
+            string playerChoice;
+            int numberOfGuesses = 4;
+
+            Console.WriteLine("This guy will join you if you can solve my riddle!");
+            ClearScreen();
+
+            // While the player still has guesses, ask them the question and check their answer.
+            for(int i = numberOfGuesses; i > 0; i--)
+            {
+                Console.WriteLine("You have " + i + " guesses left.\n");
+                Console.WriteLine("One Knight, a King, and a Queen went into a castle. The King died and two people" +
+                    " exited. Who left with the Queen?");
+
+                playerChoice = Console.ReadLine();
+                Console.Clear();
+
+                // If the player's choice is 'knight', tell them they've solved it and give them the new party member.
+                if(playerChoice.ToLower() == "knight")
+                {
+                    Console.WriteLine("Oh wow, you are just too smart for me. Here you go.");
+                    ClearScreen();
+                    return;
+                }
+            }
+
+            // If they run out of guesses, they do not get a party member and still move on.
+            Console.WriteLine("Uh oh, no party member for you.");
+            ClearScreen();
+            return;
+        }
+
+        /// <summary>
+        /// Player must fight a goblin.
+        /// </summary>
+        void RoomTwo()
+        {
             Console.WriteLine("Uh oh! Gablins!");
 
-            InitalizeEnemy("Goblin", 200, 2);
+            InitalizeEnemy("Goblin", 6, 2);
 
             Battle();
 
@@ -144,6 +181,8 @@ namespace HelloWorld
             PlayerSetUp();
 
             RoomOne();
+
+            RoomTwo();
         }
     }
 }
