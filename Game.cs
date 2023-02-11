@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,7 +12,7 @@ namespace HelloWorld
         public string Name;
         public float Health;
         public float AttackPower;
-        public Skill PlayerSkills;
+        public Skill Skill;
     }
 
     struct Skill
@@ -79,8 +79,8 @@ namespace HelloWorld
 
                 // Check to see what the player wishes to do.
                 Console.WriteLine("1. Attack \n2. Run Away");
-                if (playerCharacter.PlayerSkills.Name != null)
-                    Console.WriteLine("3. " + playerCharacter.PlayerSkills.Name);
+                if (playerCharacter.Skill.Name != null)
+                    Console.WriteLine("3. " + playerCharacter.Skill.Name);
                 playerChoice = Console.ReadLine();
                 Console.Clear();
 
@@ -88,18 +88,14 @@ namespace HelloWorld
                 if (playerChoice == "1" || playerChoice.ToLower() == "attack")
                 {
                     // ...deal damage to the enemy.
-                    Console.WriteLine("You slash out at the " + currentEnemy.Name + "!");
-                    currentEnemy.Health -= playerCharacter.AttackPower;
-                    ClearScreen();
+                    currentEnemy.Health = Attack(playerCharacter.Name, playerCharacter.AttackPower, currentEnemy.Name, currentEnemy.Health);
 
                     // If the enemy is dead, exit the fight.
                     if (currentEnemy.Health <= 0)
                         return;
 
-                    // If the enemy is still alive, the enemy damages the player.
-                    Console.WriteLine("The " + currentEnemy.Name + " lunges at you!");
-                    playerCharacter.Health -= currentEnemy.AttackPower;
-                    ClearScreen();
+                    // If the enemy is still alive, they carry on with their attack.
+                    playerCharacter.Health = Attack(currentEnemy.Name, currentEnemy.AttackPower, playerCharacter.Name, playerCharacter.Health);
                 }
                 // If the player picks the second or run away option...
                 else if (playerChoice == "2" || playerChoice.ToLower() == "run away")
@@ -109,21 +105,17 @@ namespace HelloWorld
                     return;
                 }
                 // If the player chooses the skill, have them attack the enemy with that skill.
-                else if (playerCharacter.PlayerSkills.Name != null && (playerChoice == "3" || playerChoice.ToLower() == playerCharacter.PlayerSkills.Name.ToLower()))
+                else if (playerCharacter.Skill.Name != null && (playerChoice == "3" || playerChoice.ToLower() == playerCharacter.Skill.Name.ToLower()))
                 {
                     // ...deal damage to the enemy.
-                    Console.WriteLine("You use " + playerCharacter.PlayerSkills.Name + " against the " + currentEnemy.Name + "!");
-                    currentEnemy.Health -= playerCharacter.PlayerSkills.AttackPower;
-                    ClearScreen();
+                    currentEnemy.Health = Attack(playerCharacter.Name, playerCharacter.Skill.AttackPower, currentEnemy.Name, currentEnemy.Health);
 
                     // If the enemy is dead, exit the fight.
                     if (currentEnemy.Health <= 0)
                         return;
 
                     // If the enemy is still alive, the enemy damages the player.
-                    Console.WriteLine("The " + currentEnemy.Name + " lunges at you!");
-                    playerCharacter.Health -= currentEnemy.AttackPower;
-                    ClearScreen();
+                    playerCharacter.Health = Attack(currentEnemy.Name, currentEnemy.AttackPower, playerCharacter.Name, playerCharacter.Health);
                 }
                 // If the player inputs anything else, let them know it was an invalid input.
                 else
@@ -136,6 +128,23 @@ namespace HelloWorld
             // If the player has died, set game should end to true.
             if (playerCharacter.Health <= 0)
                 gameShouldEnd = true;
+        }
+
+        /// <summary>
+        /// Some aggressor and defender fight. The defenders health being detracted from how much power the aggressor has.
+        /// </summary>
+        float Attack(string aggressorName, float aggressorAttack, string defenderName, float defenderHealth)
+        {
+            // Print out the action, and how much damage is being dealt.
+            Console.WriteLine(aggressorName + " attacks " + defenderName + " for " + aggressorAttack + " damage!");
+
+            // Subtract the amount of attack the aggressor has from the defender's health.
+            defenderHealth -= aggressorAttack;
+
+            ClearScreen();
+
+            // Return the defender's health.
+            return defenderHealth;
         }
 
         /// <summary>
@@ -184,7 +193,7 @@ namespace HelloWorld
                 {
                     Console.WriteLine("Oh wow, you are just too smart for me. Here you go.");
                     Skill throatChop; throatChop.Name = "Throat Chop"; throatChop.AttackPower = 6;
-                    playerCharacter.PlayerSkills = throatChop;
+                    playerCharacter.Skill = throatChop;
                     ClearScreen();
                     return;
                 }
@@ -234,14 +243,37 @@ namespace HelloWorld
             {
                 Console.WriteLine("You Win! And take Vrax's skill!");
                 Skill eviscerate; eviscerate.Name = "Eviscerate"; eviscerate.AttackPower = 10;
-                playerCharacter.PlayerSkills = eviscerate;
+                playerCharacter.Skill = eviscerate;
+                ClearScreen();
+
+                Console.WriteLine("Before your final fight, you enter a holy sanctuary." +
+                    " Just standing there, you feel yourself being revitalized.");
+                ClearScreen();
+
+                playerCharacter.Health += 15;
             }
         }
 
+        /// <summary>
+        /// The player faces off against the final boss.
+        /// </summary>
         void RoomFour()
         {
             if (gameShouldEnd)
                 return;
+
+            Console.WriteLine("This is it. The final fight. Prepare yourself, champion.");
+
+            InitalizeEnemy("Halstera, God of Battle", 25, 8);
+            Battle();
+
+            if (gameShouldEnd)
+                Console.WriteLine("Game Over");
+            else
+            {
+                Console.WriteLine("You have slain the God of Battle. And now you move on " +
+                    "with the rest of your life.");
+            }
         }
 
         public void Run()
@@ -253,6 +285,8 @@ namespace HelloWorld
             RoomTwo();
 
             RoomThree();
+
+            RoomFour();
         }
     }
 }
